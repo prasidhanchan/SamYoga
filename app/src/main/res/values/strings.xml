@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SamYoga</string>
+    <string name="scan_now">Scan Now</string>
+    <string name="loading">Loading…</string>
+    <string name="analyzing">Analyzing…</string>
+    <string name="something_went_wrong">Something went wrong!</string>
+    <string name="retry">Retry</string>
+    <string name="back">Back</string>
+</resources>

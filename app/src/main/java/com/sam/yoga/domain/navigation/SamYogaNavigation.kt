@@ -4,17 +4,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.sam.yoga.presentation.screens.HomeScreen
-import com.sam.yoga.presentation.screens.MainViewModel
 import com.sam.yoga.presentation.screens.ScanScreen
 import com.sam.yoga.presentation.screens.SplashScreen
 
 @Composable
-fun SamYogaNavigation(viewModel: MainViewModel = viewModel()) {
+fun SamYogaNavigation() {
     val navController = rememberNavController()
 
     Scaffold(
@@ -36,9 +35,10 @@ fun SamYogaNavigation(viewModel: MainViewModel = viewModel()) {
                     navHostController = navController
                 )
             }
-            composable<Route.Search> {
+            composable<Route.Scan> { backStack ->
+                val poseName = backStack.toRoute<Route.Scan>().poseName
                 ScanScreen(
-                    viewModel = viewModel,
+                    poseName = poseName,
                     navHostController = navController
                 )
             }

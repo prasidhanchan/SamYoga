@@ -6,4 +6,13 @@
     <string name="something_went_wrong">Something went wrong!</string>
     <string name="retry">Retry</string>
     <string name="back">Back</string>
+    <string name="ardha_chandrasana">Ardha Chandrasana</string>
+    <string name="adho_mukha_svanasana">Adho Mukha Svanasana</string>
+    <string name="baddha_konasana">Baddha Konasana</string>
+    <string name="natarajasana">Natarajasana</string>
+    <string name="trikonasana">Trikonasana</string>
+    <string name="utkata_konasana">Utkata Konasana</string>
+    <string name="veerabhadrasana">Veerabhadrasana</string>
+    <string name="great_posture">Great Posture</string>
+    <string name="pose_not_found">Pose not found!</string>
 </resources>

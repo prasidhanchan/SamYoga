@@ -11,5 +11,5 @@ sealed interface Route {
     data object Home
 
     @Serializable
-    data object Search
+    data class Scan(val poseName: String)
 }

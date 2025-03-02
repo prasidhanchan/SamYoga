@@ -17,17 +17,21 @@ cameraxVersion = "1.4.1"
 room-version = "2.6.1"
 navigationCompose = "2.8.8"
 kotlinxSerializationVersion = "1.6.3"
+poseDetection = "18.0.0-beta5"
 
 [libraries]
-#TensorFlow
+# TensorFlow
 tensorflow-lite-gpu = { module = "org.tensorflow:tensorflow-lite-gpu", version.ref = "tensorflowLiteGpu" }
 tensorflow-lite-gpu-delegate-plugin = { module = "org.tensorflow:tensorflow-lite-gpu-delegate-plugin", version.ref = "tensorflowLiteGpuDelegatePlugin" }
 tensorflow-lite-task-vision = { module = "org.tensorflow:tensorflow-lite-task-vision", version.ref = "tensorflowLiteTaskVision" }
 
-#Gemini
+# Google ML Kit
+pose-detection = { module = "com.google.mlkit:pose-detection", version.ref = "poseDetection"}
+
+# Gemini
 generativeai = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "generativeai" }
 
-#CameraX
+# CameraX
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraxVersion" }
 androidx-camera-video = { module = "androidx.camera:camera-video", version.ref = "cameraxVersion" }
 androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraxVersion" }

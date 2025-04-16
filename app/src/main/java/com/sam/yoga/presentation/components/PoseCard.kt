@@ -2,14 +2,16 @@ package com.sam.yoga.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,60 +42,68 @@ fun PoseCard(
 ) {
     Surface(
         modifier = modifier
-            .padding(vertical = 10.dp)
-            .fillMaxWidth()
-            .height(180.dp),
-        shape = RoundedCornerShape(28.dp),
+            .padding(horizontal = 10.dp)
+            .width(165.dp)
+            .height(280.dp),
+        shape = RoundedCornerShape(20.dp),
         color = color,
         onClick = { onClick(poseName) }
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 20.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(18.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Column(
-                modifier = Modifier.fillMaxHeight(),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Center
+            Text(
+                text = poseName,
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.ExtraBold
+                ),
+                color = Color.White,
+                textAlign = TextAlign.Start
+            )
+            Text(
+                text = level,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Normal
+                ),
+                color = Color.White,
+                textAlign = TextAlign.Start
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(
-                    text = poseName,
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(15.dp))
-                Text(
-                    text = level,
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal
-                    ),
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(15.dp))
                 Text(
                     text = "$time Min",
                     style = TextStyle(
                         fontSize = 14.sp,
-                        fontWeight = FontWeight.ExtraBold
+                        fontWeight = FontWeight.Medium
                     ),
                     color = Color.White,
                     textAlign = TextAlign.Center
                 )
+                Icon(
+                    painter = painterResource(id = R.drawable.play),
+                    contentDescription = "Play",
+                    tint = Color.White
+                )
             }
 
-            Image(
-                painter = image,
-                contentDescription = poseName
-            )
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = image,
+                    contentDescription = poseName
+                )
+            }
         }
     }
 }
@@ -106,7 +116,7 @@ private fun ActionIconPreview() {
             poseName = "Chair Pose",
             level = "Intermediate level",
             time = 2L,
-            image = painterResource(id = R.drawable.scan),
+            image = painterResource(id = R.drawable.ardha_chandrasana),
             onClick = { }
         )
     }

@@ -7,9 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
-import com.sam.yoga.presentation.screens.HomeScreen
-import com.sam.yoga.presentation.screens.ScanScreen
 import com.sam.yoga.presentation.screens.SplashScreen
 
 @Composable
@@ -29,18 +26,9 @@ fun SamYogaNavigation() {
                     navHostController = navController
                 )
             }
-            composable<Route.Home> {
-                HomeScreen(
-                    innerPadding = innerPadding,
-                    navHostController = navController
-                )
-            }
-            composable<Route.Scan> { backStack ->
-                val poseName = backStack.toRoute<Route.Scan>().poseName
-                ScanScreen(
-                    poseName = poseName,
-                    navHostController = navController
-                )
+
+            composable<Route.Main> {
+                InnerNavigation()
             }
         }
     }

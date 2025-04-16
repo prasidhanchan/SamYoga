@@ -3,20 +3,10 @@ package com.sam.yoga.presentation.screens
 import androidx.activity.compose.BackHandler
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,13 +17,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -43,14 +30,21 @@ import com.sam.yoga.R
 import com.sam.yoga.data.ImageAnalyzer
 import com.sam.yoga.data.YogaPoseClassifierImpl
 import com.sam.yoga.domain.Util.getCorrectionTips
+import com.sam.yoga.domain.Util.poses
 import com.sam.yoga.domain.models.Classification
 import com.sam.yoga.presentation.components.CameraPreview
+import com.sam.yoga.presentation.components.ScanSuggestionCard
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun ScanScreen(
     poseName: String,
+    poseLevel: String? = null,
     navHostController: NavHostController
 ) {
+    var currentPoseName by remember { mutableStateOf(poseName) }
+    var poseCount by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
     var classifications by remember { mutableStateOf(emptyList<Classification>()) }
     var detectedPoseName by remember { mutableStateOf("") }
@@ -58,12 +52,32 @@ fun ScanScreen(
     var imageWidth by remember { mutableIntStateOf(0) }
     var imageHeight by remember { mutableIntStateOf(0) }
     var correctionTips by remember { mutableStateOf<List<String>>(emptyList()) }
+    var countDown by remember { mutableIntStateOf(10) }
+    var isPlaying by remember { mutableStateOf(false) }
+    var forcePause by remember { mutableStateOf(false) }
+    val beginnerPoses = poses.filter { pose -> pose.level == "Beginner" }
+    val intermediatePoses = poses.filter { pose -> pose.level == "Intermediate" }
+    val advancedPoses = poses.filter { pose -> pose.level == "Advanced" }
+    val enableNext = when (poseLevel) {
+        "Beginner" -> beginnerPoses.last().name != currentPoseName
+        "Intermediate" -> intermediatePoses.last().name != currentPoseName
+        "Advanced" -> advancedPoses.last().name != currentPoseName
+        else -> false
+    }
+    val enablePrev = when (poseLevel) {
+        "Beginner" -> beginnerPoses.first().name != currentPoseName
+        "Intermediate" -> intermediatePoses.first().name != currentPoseName
+        "Advanced" -> advancedPoses.first().name != currentPoseName
+        else -> false
+    }
+
     val analyzer = remember {
         ImageAnalyzer(
             classifier = YogaPoseClassifierImpl(context = context),
             onResult = { imageClassifications ->
                 classifications = imageClassifications
-                detectedPoseName = imageClassifications.firstOrNull()?.name ?: context.getString(R.string.pose_not_found)
+                detectedPoseName = imageClassifications.firstOrNull()?.name
+                    ?: context.getString(R.string.pose_not_found)
             },
             onPoseChange = { pose, width, height ->
                 detectedPose = pose
@@ -84,8 +98,66 @@ fun ScanScreen(
     }
 
     LaunchedEffect(detectedPoseName) {
-        if (detectedPoseName != poseName) {
-            correctionTips = getCorrectionTips(poseName)
+        if (detectedPoseName != currentPoseName) {
+            correctionTips = getCorrectionTips(currentPoseName)
+        }
+    }
+
+    LaunchedEffect(key1 = countDown, key2 = isPlaying, key3 = detectedPoseName) {
+        launch {
+            delay(1000L)
+
+            isPlaying =
+                detectedPoseName == currentPoseName && !forcePause // change the playing status
+
+            if (
+                detectedPoseName == currentPoseName && // Only start countdown if the pose is proper
+                countDown > 0 &&
+                isPlaying
+            ) {
+                countDown--
+                delay(1000L)
+            } else if (poseLevel == null) {
+                isPlaying = false
+            }
+
+            if (poseLevel != null && poseCount >= 0 && enableNext && countDown == 0) {
+                when (poseLevel) {
+                    "Beginner" -> {
+                        val pose = beginnerPoses.first { it.name == currentPoseName }
+                        val poseIndex = beginnerPoses.indexOf(pose)
+                        if (poseIndex < beginnerPoses.size - 1) {
+                            currentPoseName = beginnerPoses[poseIndex + 1].name
+                        } else {
+                            beginnerPoses[poseIndex].name
+                        }
+                    }
+
+                    "Intermediate" -> {
+                        val pose = intermediatePoses.first { it.name == currentPoseName }
+                        val poseIndex = intermediatePoses.indexOf(pose)
+                        if (poseIndex < intermediatePoses.size - 1) {
+                            currentPoseName = intermediatePoses[poseIndex + 1].name
+                        } else {
+                            intermediatePoses[poseIndex].name
+                        }
+                    }
+
+                    "Advanced" -> {
+                        val pose = advancedPoses.first { it.name == currentPoseName }
+                        val poseIndex = advancedPoses.indexOf(pose)
+                        if (poseIndex < advancedPoses.size - 1) {
+                            currentPoseName = advancedPoses[poseIndex + 1].name
+                        } else {
+                            advancedPoses[poseIndex].name
+                        }
+                    }
+                }
+
+                poseCount++
+                delay(1000L)
+                countDown = 10 // Restart Count
+            }
         }
     }
 
@@ -97,63 +169,108 @@ fun ScanScreen(
             controller = controller,
             modifier = Modifier.fillMaxSize()
         )
+        Text(
+            text = "$countDown",
+            style = TextStyle(
+                fontSize = 50.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            ),
+            modifier = Modifier.padding(bottom = 200.dp)
+        )
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            Surface(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth()
-                    .animateContentSize(
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioLowBouncy,
-                            stiffness = Spring.StiffnessLow
-                        )
-                    ),
-                shape = RoundedCornerShape(20.dp),
-                color = Color(0xFF232222)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(20.dp)
-                        .wrapContentSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = poseName,
-                        style = TextStyle(
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.ExtraBold
-                        ),
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-                    if (detectedPoseName == poseName) {
-                        Spacer(modifier = Modifier.height(20.dp))
-                        Text(
-                            text = stringResource(R.string.great_posture),
-                            style = TextStyle(
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.ExtraBold
-                            ),
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1
-                        )
-                    } else {
-                        Text(
-                            text = correctionTips.joinToString("\n\n"),
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal
-                            ),
-                            textAlign = TextAlign.Start
-                        )
+            ScanSuggestionCard(
+                poseName = currentPoseName,
+                poseLevel = poseLevel,
+                detectedPoseName = detectedPoseName,
+                correctionTips = correctionTips,
+                isPlaying = isPlaying,
+                onToggle = {
+                    isPlaying = !isPlaying
+                    forcePause = !forcePause
+
+                },
+                onNext = {
+                    when (poseLevel) {
+                        "Beginner" -> {
+                            val pose = beginnerPoses.first { it.name == currentPoseName }
+                            val poseIndex = beginnerPoses.indexOf(pose)
+                            if (poseIndex < beginnerPoses.size - 1) {
+                                currentPoseName = beginnerPoses[poseIndex + 1].name
+                            } else {
+                                beginnerPoses[poseIndex].name
+                            }
+                        }
+
+                        "Intermediate" -> {
+                            val pose = intermediatePoses.first { it.name == currentPoseName }
+                            val poseIndex = intermediatePoses.indexOf(pose)
+                            if (poseIndex < intermediatePoses.size - 1) {
+                                currentPoseName = intermediatePoses[poseIndex + 1].name
+                            } else {
+                                intermediatePoses[poseIndex].name
+                            }
+                        }
+
+                        "Advanced" -> {
+                            val pose = advancedPoses.first { it.name == currentPoseName }
+                            val poseIndex = advancedPoses.indexOf(pose)
+                            if (poseIndex < advancedPoses.size - 1) {
+                                currentPoseName = advancedPoses[poseIndex + 1].name
+                            } else {
+                                advancedPoses[poseIndex].name
+                            }
+                        }
                     }
-                }
-            }
+
+                    poseCount++
+                    countDown = 10 // Restart Count
+                },
+                onPrevious = {
+                    when (poseLevel) {
+                        "Beginner" -> {
+                            val pose = beginnerPoses.first { it.name == currentPoseName }
+                            val poseIndex = beginnerPoses.indexOf(pose)
+                            if (poseIndex > 0) {
+                                currentPoseName = beginnerPoses[poseIndex - 1].name
+                            } else {
+                                beginnerPoses[poseIndex].name
+                            }
+                        }
+
+                        "Intermediate" -> {
+                            val pose = intermediatePoses.first { it.name == currentPoseName }
+                            val poseIndex = intermediatePoses.indexOf(pose)
+                            if (poseIndex > 0) {
+                                currentPoseName = intermediatePoses[poseIndex - 1].name
+                            } else {
+                                intermediatePoses[poseIndex].name
+                            }
+                        }
+
+                        "Advanced" -> {
+                            val pose = advancedPoses.first { it.name == currentPoseName }
+                            val poseIndex = advancedPoses.indexOf(pose)
+                            if (poseIndex > 0) {
+                                currentPoseName = advancedPoses[poseIndex - 1].name
+                            } else {
+                                advancedPoses[poseIndex].name
+                            }
+                        }
+                    }
+
+                    poseCount--
+                    countDown = 10 // Restart Count
+                },
+                enableNext = enableNext,
+                enablePrevious = enablePrev,
+                modifier = Modifier
+                    .padding(bottom = 20.dp)
+                    .fillMaxWidth()
+            )
         }
     }
 

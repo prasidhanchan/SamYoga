@@ -40,7 +40,7 @@ fun SplashScreen(
             )
         )
         delay(1000L)
-        navHostController.navigate(Route.Home) {
+        navHostController.navigate(Route.Main) {
             popUpTo(Route.Splash) { inclusive = true }
         }
     }

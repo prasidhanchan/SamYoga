@@ -70,12 +70,15 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.extensions)
 
+    // Gemini
     implementation(libs.generativeai)
 
+    // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
+    // Navigation compose
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization)
 

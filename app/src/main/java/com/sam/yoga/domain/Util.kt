@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import androidx.core.content.ContextCompat
 import com.sam.yoga.R
 import com.sam.yoga.SamYogaApplication.Companion.getAppContext
+import com.sam.yoga.domain.models.YogaPose
 
 object Util {
 
@@ -29,6 +30,65 @@ object Util {
             Manifest.permission.CAMERA
         ) == PackageManager.PERMISSION_GRANTED
     }
+
+    val poses = listOf(
+        YogaPose(
+            name = "Ardha Chandrasana",
+            description = "",
+            level = "Intermediate",
+            time = 2L,
+            image = R.drawable.ardha_chandrasana
+        ),
+        YogaPose(
+            name = "Adho Mukha Svanasana",
+            description = "",
+            level = "Beginner",
+            time = 3L,
+            image = R.drawable.adho_mukha_svanasana
+        ),
+        YogaPose(
+            name = "Baddha Konasana",
+            description = "",
+            level = "Beginner",
+            time = 5L,
+            image = R.drawable.baddha_konasana
+        ),
+        YogaPose(
+            name = "Natarajasana",
+            description = "",
+            level = "Advanced",
+            time = 2L,
+            image = R.drawable.natarajasana
+        ),
+        YogaPose(
+            name = "Trikonasana",
+            description = "",
+            level = "Beginner",
+            time = 5L,
+            image = R.drawable.trikonasana
+        ),
+        YogaPose(
+            name = "Utkata Konasana",
+            description = "",
+            level = "Intermediate",
+            time = 5L,
+            image = R.drawable.utkata_konasana
+        ),
+        YogaPose(
+            name = "Veerabhadrasana",
+            description = "",
+            level = "Intermediate",
+            time = 3L,
+            image = R.drawable.veerabhadrasana
+        ),
+        YogaPose(
+            name = "Vrukshasana",
+            description = "",
+            level = "Advanced",
+            time = 5L,
+            image = R.drawable.vrukshasana
+        )
+    )
 
     fun getCorrectionTips(poseName: String): List<String> {
         val context = getAppContext()

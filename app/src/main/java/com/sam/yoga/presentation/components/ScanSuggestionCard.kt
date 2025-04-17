@@ -3,14 +3,13 @@ package com.sam.yoga.presentation.components
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -36,6 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sam.yoga.R
+import com.sam.yoga.presentation.theme.GreenColor
+import com.sam.yoga.presentation.theme.OffBlack
 
 @Composable
 fun ScanSuggestionCard(
@@ -62,7 +63,11 @@ fun ScanSuggestionCard(
                 )
             ),
         shape = RoundedCornerShape(20.dp),
-        color = Color(0xFF232222)
+        color = OffBlack,
+        border = BorderStroke(
+            width = 2.dp,
+            color = if (poseName == detectedPoseName) GreenColor else OffBlack
+        )
     ) {
         Column(
             modifier = Modifier
@@ -81,13 +86,13 @@ fun ScanSuggestionCard(
                 maxLines = 1
             )
             if (detectedPoseName == poseName) {
-                Spacer(modifier = Modifier.height(20.dp))
                 Text(
                     text = stringResource(R.string.great_posture),
                     style = TextStyle(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.ExtraBold
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
                     ),
+                    color = GreenColor,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1
                 )

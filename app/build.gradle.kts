@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.google.secrets.gradle.plugin)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -73,10 +74,11 @@ dependencies {
     // Gemini
     implementation(libs.generativeai)
 
-    // Room
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
+    // Firebase
+    implementation(libs.firebase.authentication)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.analytics)
+    implementation(platform(libs.firebase.bom))
 
     // Navigation compose
     implementation(libs.navigation.compose)

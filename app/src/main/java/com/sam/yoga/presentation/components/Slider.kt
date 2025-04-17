@@ -38,7 +38,7 @@ fun Slider(
     ) {
         HorizontalPager(
             modifier = modifier
-                .padding(bottom = 10.dp)
+                .padding(bottom = 14.dp)
                 .fillMaxWidth(),
             state = state,
             userScrollEnabled = true,

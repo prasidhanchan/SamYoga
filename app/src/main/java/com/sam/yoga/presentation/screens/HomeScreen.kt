@@ -15,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -32,6 +31,8 @@ import com.sam.yoga.domain.navigation.Route
 import com.sam.yoga.presentation.components.PoseCard
 import com.sam.yoga.presentation.components.Slider
 import com.sam.yoga.presentation.theme.BrandColor
+import com.sam.yoga.presentation.theme.PurpleColor
+import com.sam.yoga.presentation.theme.RedColor
 import com.sam.yoga.presentation.theme.SamYogaTheme
 
 @Composable
@@ -82,7 +83,7 @@ fun HomeScreen(
                 .padding(top = 20.dp)
                 .fillMaxWidth()
                 .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.Start,
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             poses.forEach { pose ->
@@ -92,8 +93,8 @@ fun HomeScreen(
                     time = pose.time,
                     color = when (pose.level) {
                         "Beginner" -> BrandColor
-                        "Intermediate" -> Color(0xFFA880F5)
-                        else -> Color(0xFFE3675D)
+                        "Intermediate" -> PurpleColor
+                        else -> RedColor
                     },
                     image = painterResource(id = pose.image),
                     onClick = { navHostController.navigate(Route.Scan(poseName = pose.name)) },

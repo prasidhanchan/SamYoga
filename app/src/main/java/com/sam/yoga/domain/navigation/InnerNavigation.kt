@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -14,6 +15,7 @@ import com.sam.yoga.getCurrentRoute
 import com.sam.yoga.presentation.components.BottomBar
 import com.sam.yoga.presentation.screens.ExploreScreen
 import com.sam.yoga.presentation.screens.HomeScreen
+import com.sam.yoga.presentation.screens.MainViewModel
 import com.sam.yoga.presentation.screens.ProfileScreen
 import com.sam.yoga.presentation.screens.ScanScreen
 import com.sam.yoga.presentation.screens.SessionScreen
@@ -45,13 +47,15 @@ fun InnerNavigation() {
                 )
             }
             composable<Route.Scan> { backStack ->
+                val viewModel: MainViewModel = viewModel()
                 val poseName = backStack.toRoute<Route.Scan>().poseName
                 val poseLevel = backStack.toRoute<Route.Scan>().poseLevel
 
                 ScanScreen(
                     poseName = poseName,
                     poseLevel = poseLevel,
-                    navHostController = navController
+                    navHostController = navController,
+                    viewModel = viewModel
                 )
             }
             composable<Route.Session> {

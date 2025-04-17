@@ -1,5 +1,6 @@
 package com.sam.yoga.presentation.screens
 
+import android.media.MediaPlayer
 import androidx.activity.compose.BackHandler
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
@@ -9,11 +10,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,11 +27,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.google.mlkit.vision.pose.Pose
 import com.sam.yoga.R
 import com.sam.yoga.data.ImageAnalyzer
 import com.sam.yoga.data.YogaPoseClassifierImpl
+import com.sam.yoga.data.YogaTTS
 import com.sam.yoga.domain.Util.getCorrectionTips
 import com.sam.yoga.domain.Util.poses
 import com.sam.yoga.domain.models.Classification
@@ -41,20 +45,16 @@ import kotlinx.coroutines.launch
 fun ScanScreen(
     poseName: String,
     poseLevel: String? = null,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    viewModel: MainViewModel
 ) {
-    var currentPoseName by remember { mutableStateOf(poseName) }
-    var poseCount by remember { mutableIntStateOf(0) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var currentPoseName by rememberSaveable { mutableStateOf(poseName) }
     val context = LocalContext.current
     var classifications by remember { mutableStateOf(emptyList<Classification>()) }
-    var detectedPoseName by remember { mutableStateOf("") }
-    var detectedPose by remember { mutableStateOf<Pose?>(null) }
     var imageWidth by remember { mutableIntStateOf(0) }
     var imageHeight by remember { mutableIntStateOf(0) }
     var correctionTips by remember { mutableStateOf<List<String>>(emptyList()) }
-    var countDown by remember { mutableIntStateOf(10) }
-    var isPlaying by remember { mutableStateOf(false) }
-    var forcePause by remember { mutableStateOf(false) }
     val beginnerPoses = poses.filter { pose -> pose.level == "Beginner" }
     val intermediatePoses = poses.filter { pose -> pose.level == "Intermediate" }
     val advancedPoses = poses.filter { pose -> pose.level == "Advanced" }
@@ -71,16 +71,27 @@ fun ScanScreen(
         else -> false
     }
 
+    val yogaTTS = remember { YogaTTS(context) }
+    var mediaPlayer: MediaPlayer? = null
+
+    DisposableEffect(Unit) {
+        onDispose {
+            yogaTTS.shutdown()
+        }
+    }
+
     val analyzer = remember {
         ImageAnalyzer(
             classifier = YogaPoseClassifierImpl(context = context),
             onResult = { imageClassifications ->
                 classifications = imageClassifications
-                detectedPoseName = imageClassifications.firstOrNull()?.name
-                    ?: context.getString(R.string.pose_not_found)
+                viewModel.setDetectedPoseName(
+                    imageClassifications.firstOrNull()?.name
+                        ?: context.getString(R.string.pose_not_found)
+                )
             },
             onPoseChange = { pose, width, height ->
-                detectedPose = pose
+                viewModel.setDetectedPose(pose)
                 imageWidth = width
                 imageHeight = height
             }
@@ -97,31 +108,53 @@ fun ScanScreen(
         }
     }
 
-    LaunchedEffect(detectedPoseName) {
-        if (detectedPoseName != currentPoseName) {
-            correctionTips = getCorrectionTips(currentPoseName)
+    LaunchedEffect(uiState.detectedPoseName) {
+        if(currentPoseName == uiState.detectedPoseName) {
+            mediaPlayer?.release()
+            mediaPlayer = MediaPlayer.create(context, R.raw.correct_pose)
+            mediaPlayer?.setOnCompletionListener { mp ->
+                mp.release()
+            }
+            mediaPlayer?.start()
         }
     }
 
-    LaunchedEffect(key1 = countDown, key2 = isPlaying, key3 = detectedPoseName) {
+    LaunchedEffect(
+        key1 = currentPoseName,
+        key2 = uiState.detectedPoseName,
+        key3 = uiState.forcePause
+    ) {
+        if (uiState.detectedPoseName != currentPoseName && !uiState.forcePause) {
+            delay(1000L)
+            correctionTips = getCorrectionTips(currentPoseName)
+            yogaTTS.speakYogaInstruction(currentPoseName)
+            yogaTTS.speakYogaInstruction(correctionTips.joinToString("."))
+        } else {
+            yogaTTS.stopSpeaking()
+        }
+    }
+
+    LaunchedEffect(
+        key1 = uiState.countDown,
+        key2 = uiState.isPlaying,
+        key3 = uiState.detectedPoseName
+    ) {
         launch {
             delay(1000L)
 
-            isPlaying =
-                detectedPoseName == currentPoseName && !forcePause // change the playing status
+            viewModel.setIsPlaying(!uiState.forcePause) // change the playing status
 
             if (
-                detectedPoseName == currentPoseName && // Only start countdown if the pose is proper
-                countDown > 0 &&
-                isPlaying
+                uiState.detectedPoseName == currentPoseName && // Only start the countdown if the pose is proper
+                uiState.countDown > 0 &&
+                uiState.isPlaying
             ) {
-                countDown--
-                delay(1000L)
-            } else if (poseLevel == null) {
-                isPlaying = false
+                yogaTTS.speakYogaInstruction(uiState.countDown.toString()) // Start CountDown Speech
+                delay(1000L) // Delay so that it reads correct count
+                viewModel.setCountDown(uiState.countDown - 1)
             }
 
-            if (poseLevel != null && poseCount >= 0 && enableNext && countDown == 0) {
+            if (poseLevel != null && uiState.poseCount >= 0 && enableNext && uiState.countDown == 0) {
                 when (poseLevel) {
                     "Beginner" -> {
                         val pose = beginnerPoses.first { it.name == currentPoseName }
@@ -154,9 +187,9 @@ fun ScanScreen(
                     }
                 }
 
-                poseCount++
+                viewModel.setPoseCount(uiState.poseCount + 1)
                 delay(1000L)
-                countDown = 10 // Restart Count
+                viewModel.setCountDown(10) // Restart Count
             }
         }
     }
@@ -170,7 +203,7 @@ fun ScanScreen(
             modifier = Modifier.fillMaxSize()
         )
         Text(
-            text = "$countDown",
+            text = "${uiState.countDown}",
             style = TextStyle(
                 fontSize = 50.sp,
                 fontWeight = FontWeight.Bold,
@@ -185,15 +218,15 @@ fun ScanScreen(
             ScanSuggestionCard(
                 poseName = currentPoseName,
                 poseLevel = poseLevel,
-                detectedPoseName = detectedPoseName,
+                detectedPoseName = uiState.detectedPoseName.toString(),
                 correctionTips = correctionTips,
-                isPlaying = isPlaying,
+                isPlaying = uiState.isPlaying,
                 onToggle = {
-                    isPlaying = !isPlaying
-                    forcePause = !forcePause
-
+                    viewModel.setIsPlaying(!uiState.isPlaying)
+                    viewModel.setForcePause(!uiState.forcePause)
                 },
                 onNext = {
+                    yogaTTS.stopSpeaking() // Stop speaking on Next since it wont change the speech if the pose is switched
                     when (poseLevel) {
                         "Beginner" -> {
                             val pose = beginnerPoses.first { it.name == currentPoseName }
@@ -226,10 +259,11 @@ fun ScanScreen(
                         }
                     }
 
-                    poseCount++
-                    countDown = 10 // Restart Count
+                    viewModel.setPoseCount(uiState.poseCount + 1)
+                    viewModel.setCountDown(10) // Restart Count
                 },
                 onPrevious = {
+                    yogaTTS.stopSpeaking() // Stop speaking on Prev since it wont change the speech if the pose is switched
                     when (poseLevel) {
                         "Beginner" -> {
                             val pose = beginnerPoses.first { it.name == currentPoseName }
@@ -262,8 +296,8 @@ fun ScanScreen(
                         }
                     }
 
-                    poseCount--
-                    countDown = 10 // Restart Count
+                    viewModel.setPoseCount(uiState.poseCount - 1)
+                    viewModel.setCountDown(10) // Restart Count
                 },
                 enableNext = enableNext,
                 enablePrevious = enablePrev,

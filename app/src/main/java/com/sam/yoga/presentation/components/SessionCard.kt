@@ -2,6 +2,7 @@ package com.sam.yoga.presentation.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -25,7 +27,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sam.yoga.R
+import com.sam.yoga.presentation.theme.BrandColor
 import com.sam.yoga.presentation.theme.OffBlack
+import com.sam.yoga.presentation.theme.PurpleColor
+import com.sam.yoga.presentation.theme.RedColor
 
 @Composable
 fun SessionCard(
@@ -54,8 +59,16 @@ fun SessionCard(
                 painter = painterResource(id = image),
                 contentDescription = poseLevel,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(5.dp))
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(
+                        when (poseLevel) {
+                            "Beginner" -> BrandColor
+                            "Intermediate" -> PurpleColor
+                            else -> RedColor
+                        }
+                    )
                     .size(50.dp)
+                    .scale(0.8f)
             )
             Column(
                 modifier = Modifier.weight(2f),
@@ -63,7 +76,7 @@ fun SessionCard(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "$poseLevel Pose",
+                    text = "$poseLevel Poses",
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,

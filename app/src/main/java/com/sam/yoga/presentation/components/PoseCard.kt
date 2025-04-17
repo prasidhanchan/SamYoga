@@ -42,8 +42,8 @@ fun PoseCard(
 ) {
     Surface(
         modifier = modifier
-            .padding(horizontal = 10.dp)
-            .width(165.dp)
+            .padding(horizontal = 8.dp)
+            .width(170.dp)
             .height(280.dp),
         shape = RoundedCornerShape(20.dp),
         color = color,
@@ -51,7 +51,7 @@ fun PoseCard(
     ) {
         Column(
             modifier = Modifier
-                .padding(18.dp)
+                .padding(16.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -59,7 +59,7 @@ fun PoseCard(
             Text(
                 text = poseName,
                 style = TextStyle(
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.ExtraBold
                 ),
                 color = Color.White,
@@ -80,7 +80,7 @@ fun PoseCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "$time Min",
+                    text = "$time min",
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium

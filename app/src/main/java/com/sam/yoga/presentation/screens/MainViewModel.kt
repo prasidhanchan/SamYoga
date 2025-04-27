@@ -3,56 +3,67 @@ package com.sam.yoga.presentation.screens
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
 import com.google.mlkit.vision.pose.Pose
+import com.sam.yoga.domain.models.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class MainViewModel : ViewModel() {
 
     var uiState: MutableStateFlow<UiState> = MutableStateFlow(UiState())
         private set
 
+    val currentUser = FirebaseAuth.getInstance().currentUser
     val firebaseAuth = FirebaseAuth.getInstance()
+    val fireStore = FirebaseFirestore.getInstance()
 
-    fun signUp(
-        email: String,
-        password: String,
-        onSuccess: () -> Unit,
-        onError: (error: String?) -> Unit
-    ) {
+    init {
+        getUserProfile()
+    }
+
+    fun getUserProfile() {
         uiState.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
-            firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener { result ->
-                    onSuccess()
-                    uiState.update { it.copy(loading = false) }
-                }
-                .addOnFailureListener { error ->
-                    onError(error.localizedMessage)
-                    uiState.update { it.copy(loading = false) }
-                }
+            if (currentUser != null) {
+                val userId = firebaseAuth.currentUser?.uid!!
+                fireStore.collection("Users")
+                    .document(userId)
+                    .get()
+                    .addOnSuccessListener { docSnap ->
+                        val user = docSnap.toObject<User>()
+                        uiState.update { it.copy(user = user) }
+                    }
+                    .await()
+            }
+
+            uiState.update { it.copy(loading = false) }
         }
     }
 
-    fun login(
-        email: String,
-        password: String,
-        onSuccess: () -> Unit,
-        onError: (error: String?) -> Unit
-    ) {
-        uiState.update { it.copy(loading = true) }
+    fun logout(onSuccess: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener { result ->
-                    onSuccess()
-                    uiState.update { it.copy(loading = false) }
-                }
-                .addOnFailureListener { error ->
-                    onError(error.localizedMessage)
-                    uiState.update { it.copy(loading = false) }
-                }
+            firebaseAuth.signOut()
+            onSuccess()
+            uiState.update { it.copy(user = null) }
+        }
+    }
+
+    fun clearScanState() {
+        uiState.update {
+            it.copy(
+                countDown = 10,
+                poseCount = 0,
+                isPlaying = true,
+                detectedPose = null,
+                detectedPoseName = null,
+                forcePause = false,
+                loading = false
+            )
         }
     }
 

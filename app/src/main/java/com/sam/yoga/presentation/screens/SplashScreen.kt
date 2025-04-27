@@ -20,17 +20,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseUser
+import com.sam.yoga.R
 import com.sam.yoga.domain.navigation.Route
 import com.sam.yoga.presentation.theme.SamYogaTheme
 import kotlinx.coroutines.delay
-import com.sam.yoga.R
 
 @Composable
 fun SplashScreen(
     innerPadding: PaddingValues,
+    currentUser: FirebaseUser?,
     navHostController: NavHostController
 ) {
     val animatable = remember { Animatable(initialValue = 0f) }
+
     LaunchedEffect(Unit) {
         animatable.animateTo(
             targetValue = 1.2f,
@@ -40,7 +43,7 @@ fun SplashScreen(
             )
         )
         delay(1000L)
-        navHostController.navigate(Route.Main) {
+        navHostController.navigate(if (currentUser != null) Route.Main else Route.Login) {
             popUpTo(Route.Splash) { inclusive = true }
         }
     }
@@ -67,6 +70,7 @@ private fun SplashScreenPreview() {
     SamYogaTheme {
         SplashScreen(
             innerPadding = PaddingValues(),
+            currentUser = null,
             navHostController = rememberNavController()
         )
     }

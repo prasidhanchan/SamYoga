@@ -106,7 +106,7 @@ fun HomeScreen(
 
 @Preview(
     showBackground = true,
-    backgroundColor = 0XFFFFFFFF
+    backgroundColor = 0XFF000000
 )
 @Composable
 private fun HomeScreenPreview() {

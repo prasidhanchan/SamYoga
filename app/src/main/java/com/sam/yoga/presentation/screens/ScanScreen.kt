@@ -109,7 +109,7 @@ fun ScanScreen(
     }
 
     LaunchedEffect(uiState.detectedPoseName) {
-        if(currentPoseName == uiState.detectedPoseName) {
+        if (currentPoseName == uiState.detectedPoseName) {
             mediaPlayer?.release()
             mediaPlayer = MediaPlayer.create(context, R.raw.correct_pose)
             mediaPlayer?.setOnCompletionListener { mp ->
@@ -310,5 +310,6 @@ fun ScanScreen(
 
     BackHandler {
         navHostController.popBackStack()
+        viewModel.clearScanState()
     }
 }

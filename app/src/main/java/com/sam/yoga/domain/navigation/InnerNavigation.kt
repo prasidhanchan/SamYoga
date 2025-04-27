@@ -21,10 +21,12 @@ import com.sam.yoga.presentation.screens.ScanScreen
 import com.sam.yoga.presentation.screens.SessionScreen
 
 @Composable
-fun InnerNavigation() {
+fun InnerNavigation(onLogoutClick: () -> Unit) {
     val navController = rememberNavController()
     val navaBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navaBackStackEntry.value?.getCurrentRoute()
+
+    val viewModel: MainViewModel = viewModel()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -47,7 +49,6 @@ fun InnerNavigation() {
                 )
             }
             composable<Route.Scan> { backStack ->
-                val viewModel: MainViewModel = viewModel()
                 val poseName = backStack.toRoute<Route.Scan>().poseName
                 val poseLevel = backStack.toRoute<Route.Scan>().poseLevel
 
@@ -65,7 +66,10 @@ fun InnerNavigation() {
                 ExploreScreen()
             }
             composable<Route.Profile> {
-                ProfileScreen()
+                ProfileScreen(
+                    viewModel = viewModel,
+                    onLogoutClick = onLogoutClick
+                )
             }
         }
     }

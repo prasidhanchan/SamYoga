@@ -19,6 +19,7 @@ kotlinxSerializationVersion = "1.6.3"
 poseDetection = "18.0.0-beta5"
 firebaseBom = "33.12.0"
 google-services = "4.4.2"
+securityCrypto = "1.1.0-alpha07"
 
 [libraries]
 # TensorFlow
@@ -51,6 +52,8 @@ navigation-compose = { module = "androidx.navigation:navigation-compose", versio
 
 # Serialization
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationVersion" }
+
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

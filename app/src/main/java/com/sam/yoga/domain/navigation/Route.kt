@@ -9,6 +9,12 @@ sealed class Route(val icon: Int = 0) {
     data object Splash : Route()
 
     @Serializable
+    data object Login : Route()
+
+    @Serializable
+    data object SignUp : Route()
+
+    @Serializable
     data object Main : Route()
 
     @Serializable

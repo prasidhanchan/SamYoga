@@ -28,12 +28,13 @@ import com.sam.yoga.R
 import com.sam.yoga.presentation.theme.OffBlack
 
 @Composable
-fun SamYogaTextBox(
+fun SamYogaTextBox2(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     @DrawableRes leadingIcon: Int? = null,
     placeholder: String = "",
+    label: String = "",
     imeAction: ImeAction = ImeAction.Next,
     keyboardType: KeyboardType = KeyboardType.Text,
     keyboardActions: KeyboardActions = KeyboardActions(),
@@ -54,8 +55,16 @@ fun SamYogaTextBox(
                 text = placeholder,
                 style = TextStyle(
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = OffBlack.copy(alpha = 0.8f)
+                    fontWeight = FontWeight.Normal
+                )
+            )
+        },
+        label = {
+            Text(
+                text = label,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Normal
                 )
             )
         },
@@ -63,19 +72,17 @@ fun SamYogaTextBox(
             if (leadingIcon != null) {
                 Icon(
                     painter = painterResource(id = leadingIcon),
-                    contentDescription = placeholder,
-                    tint = OffBlack.copy(alpha = 0.8f)
+                    contentDescription = placeholder
                 )
             }
         },
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color.White.copy(alpha = 0.8f),
-            unfocusedContainerColor = Color.White.copy(alpha = 0.8f),
+            focusedContainerColor = OffBlack.copy(alpha = 0.8f),
+            unfocusedContainerColor = OffBlack.copy(alpha = 0.8f),
+            disabledContainerColor = OffBlack.copy(alpha = 0.8f),
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            focusedTextColor = OffBlack,
-            unfocusedTextColor = OffBlack,
-            cursorColor = OffBlack
+            disabledIndicatorColor = Color.Transparent
         ),
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
@@ -92,8 +99,8 @@ fun SamYogaTextBox(
 
 @Preview
 @Composable
-private fun SamYogaTextBoxPreview() {
-    SamYogaTextBox(
+private fun SamYogaTextBox2Preview() {
+    SamYogaTextBox2(
         value = "Hello",
         onValueChange = { },
         leadingIcon = R.drawable.email

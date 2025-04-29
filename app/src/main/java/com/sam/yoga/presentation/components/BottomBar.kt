@@ -30,7 +30,9 @@ fun BottomBar(
 ) {
     val routes = Route.routes
 
-    if(currentRoute != Route.Scan()) {
+    if (currentRoute != Route.Scan() && currentRoute != Route.EditProfile &&
+        currentRoute != Route.RecentActivity
+    ) {
         Row(
             modifier = modifier
                 .padding(10.dp)

@@ -30,9 +30,6 @@ import com.sam.yoga.domain.Util.poses
 import com.sam.yoga.domain.navigation.Route
 import com.sam.yoga.presentation.components.PoseCard
 import com.sam.yoga.presentation.components.Slider
-import com.sam.yoga.presentation.theme.BrandColor
-import com.sam.yoga.presentation.theme.PurpleColor
-import com.sam.yoga.presentation.theme.RedColor
 import com.sam.yoga.presentation.theme.SamYogaTheme
 
 @Composable
@@ -91,11 +88,6 @@ fun HomeScreen(
                     poseName = pose.name,
                     level = pose.level,
                     time = pose.time,
-                    color = when (pose.level) {
-                        "Beginner" -> BrandColor
-                        "Intermediate" -> PurpleColor
-                        else -> RedColor
-                    },
                     image = painterResource(id = pose.image),
                     onClick = { navHostController.navigate(Route.Scan(poseName = pose.name)) },
                 )

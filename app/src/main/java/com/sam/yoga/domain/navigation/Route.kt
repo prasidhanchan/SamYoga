@@ -32,6 +32,12 @@ sealed class Route(val icon: Int = 0) {
     @Serializable
     data object Profile : Route(icon = R.drawable.profile)
 
+    @Serializable
+    data object EditProfile : Route()
+
+    @Serializable
+    data object RecentActivity : Route()
+
     companion object {
         val routes = listOf(Home, Session, Explore, Profile)
     }

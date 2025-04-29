@@ -1,6 +1,7 @@
 package com.sam.yoga.presentation.screens
 
 import android.media.MediaPlayer
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
@@ -16,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -35,6 +37,7 @@ import com.sam.yoga.data.YogaPoseClassifierImpl
 import com.sam.yoga.data.YogaTTS
 import com.sam.yoga.domain.Util.getCorrectionTips
 import com.sam.yoga.domain.Util.poses
+import com.sam.yoga.domain.mappers.toYogaPoseData
 import com.sam.yoga.domain.models.Classification
 import com.sam.yoga.presentation.components.CameraPreview
 import com.sam.yoga.presentation.components.ScanSuggestionCard
@@ -51,6 +54,7 @@ fun ScanScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var currentPoseName by rememberSaveable { mutableStateOf(poseName) }
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     var classifications by remember { mutableStateOf(emptyList<Classification>()) }
     var imageWidth by remember { mutableIntStateOf(0) }
     var imageHeight by remember { mutableIntStateOf(0) }
@@ -75,6 +79,26 @@ fun ScanScreen(
     var mediaPlayer: MediaPlayer? = null
 
     DisposableEffect(Unit) {
+        viewModel.updateUserActivity(
+            yogaPose = when (poseLevel) {
+                "Beginner" -> beginnerPoses.first { it.name == currentPoseName }
+                    .toYogaPoseData()
+
+                "Intermediate" -> intermediatePoses.first { it.name == currentPoseName }
+                    .toYogaPoseData()
+
+                "Advanced" -> advancedPoses.first { it.name == currentPoseName }
+                    .toYogaPoseData()
+
+                else -> poses.first { it.name == currentPoseName }.toYogaPoseData()
+            },
+            onSuccess = { },
+            onError = { error ->
+                scope.launch {
+                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
         onDispose {
             yogaTTS.shutdown()
         }

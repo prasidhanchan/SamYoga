@@ -1,14 +1,11 @@
 package com.sam.yoga.domain.models
 
-import androidx.compose.runtime.Stable
-
-@Stable
 data class User(
-    val userId: String = "",
-    val name: String = "",
-    val email: String = "",
-    val password: String = "",
-    val gender: String = "Unknown"
+    var userId: String = "",
+    var name: String = "",
+    var email: String = "",
+    var password: String = "",
+    var gender: String = "Unknown"
 ) {
     fun toMap(): Map<String, Any> {
         return hashMapOf(

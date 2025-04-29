@@ -32,7 +32,7 @@ fun SamYogaButton(
     modifier: Modifier = Modifier,
     color: Color = BrandColor,
     textColor: Color = Color.White,
-    enabled: Boolean = false,
+    enabled: Boolean = true,
     loading: Boolean = false
 ) {
     Surface(

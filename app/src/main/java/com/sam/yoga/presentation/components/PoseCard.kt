@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sam.yoga.R
 import com.sam.yoga.presentation.theme.BrandColor
+import com.sam.yoga.presentation.theme.PurpleColor
+import com.sam.yoga.presentation.theme.RedColor
 import com.sam.yoga.presentation.theme.SamYogaTheme
 
 @Composable
@@ -38,11 +40,15 @@ fun PoseCard(
     image: Painter,
     modifier: Modifier = Modifier,
     onClick: (String) -> Unit,
-    color: Color = BrandColor
+    color: Color = when (level) {
+        "Beginner" -> BrandColor
+        "Intermediate" -> PurpleColor
+        else -> RedColor
+    }
 ) {
     Surface(
         modifier = modifier
-            .padding(horizontal = 8.dp)
+            .padding(8.dp)
             .width(170.dp)
             .height(280.dp),
         shape = RoundedCornerShape(20.dp),
@@ -114,7 +120,7 @@ private fun ActionIconPreview() {
     SamYogaTheme {
         PoseCard(
             poseName = "Chair Pose",
-            level = "Intermediate level",
+            level = "Beginner",
             time = 2L,
             image = painterResource(id = R.drawable.ardha_chandrasana),
             onClick = { }

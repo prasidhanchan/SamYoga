@@ -13,10 +13,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.sam.yoga.getCurrentRoute
 import com.sam.yoga.presentation.components.BottomBar
+import com.sam.yoga.presentation.screens.EditProfileScreen
 import com.sam.yoga.presentation.screens.ExploreScreen
 import com.sam.yoga.presentation.screens.HomeScreen
 import com.sam.yoga.presentation.screens.MainViewModel
 import com.sam.yoga.presentation.screens.ProfileScreen
+import com.sam.yoga.presentation.screens.RecentActivityScreen
 import com.sam.yoga.presentation.screens.ScanScreen
 import com.sam.yoga.presentation.screens.SessionScreen
 
@@ -67,8 +69,24 @@ fun InnerNavigation(onLogoutClick: () -> Unit) {
             }
             composable<Route.Profile> {
                 ProfileScreen(
+                    innerPadding = innerPadding,
                     viewModel = viewModel,
-                    onLogoutClick = onLogoutClick
+                    onLogoutClick = onLogoutClick,
+                    navHostController = navController
+                )
+            }
+            composable<Route.EditProfile> {
+                EditProfileScreen(
+                    innerPadding = innerPadding,
+                    viewModel = viewModel,
+                    navHostController = navController
+                )
+            }
+            composable<Route.RecentActivity> {
+                RecentActivityScreen(
+                    innerPadding = innerPadding,
+                    viewModel = viewModel,
+                    navHostController = navController
                 )
             }
         }

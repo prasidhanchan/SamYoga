@@ -4,9 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.toObject
+import com.google.firebase.firestore.toObjects
 import com.google.mlkit.vision.pose.Pose
+import com.sam.yoga.domain.mappers.toYogaPose
 import com.sam.yoga.domain.models.User
+import com.sam.yoga.domain.models.YogaPoseData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -40,8 +44,74 @@ class MainViewModel : ViewModel() {
                     }
                     .await()
             }
+        }
+        uiState.update { it.copy(loading = false) }
+    }
 
-            uiState.update { it.copy(loading = false) }
+    fun updateUserProfile(
+        name: String,
+        gender: String,
+        onSuccess: () -> Unit,
+        onError: (String?) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val userId = firebaseAuth.currentUser?.uid!!
+            fireStore.collection("Users")
+                .document(userId)
+                .update(
+                    mapOf(
+                        "name" to name,
+                        "gender" to gender
+                    )
+                )
+                .addOnSuccessListener { onSuccess() }
+                .addOnFailureListener { error ->
+                    onError(error.localizedMessage)
+                }
+                .await()
+        }
+    }
+
+    fun getUserActivities() {
+        uiState.update { it.copy(loading = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            if (currentUser != null) {
+                val userId = firebaseAuth.currentUser?.uid!!
+                fireStore.collection("Activities")
+                    .whereEqualTo("userId", userId)
+                    .orderBy("timeStamp", Query.Direction.DESCENDING)
+                    .get()
+                    .addOnSuccessListener { docSnap ->
+                        val activities = docSnap.toObjects<YogaPoseData>()
+                        val yogaPoses = activities.map { it.toYogaPose() }
+                        viewModelScope.launch(Dispatchers.Main) {
+                            uiState.update { it.copy(activities = yogaPoses) }
+                        }
+                    }
+                    .addOnFailureListener {
+                        viewModelScope.launch(Dispatchers.Main) {
+                            uiState.update { it.copy(loading = false) }
+                        }
+                    }
+            }
+        }
+
+        uiState.update { it.copy(loading = false) }
+    }
+
+    fun updateUserActivity(
+        yogaPose: YogaPoseData,
+        onSuccess: () -> Unit,
+        onError: (String?) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            fireStore.collection("Activities")
+                .add(yogaPose.apply { userId = currentUser?.uid!! })
+                .addOnSuccessListener { onSuccess() }
+                .addOnFailureListener { error ->
+                    onError(error.localizedMessage)
+                }
+                .await()
         }
     }
 

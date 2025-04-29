@@ -18,6 +18,8 @@ fun NavBackStackEntry.getCurrentRoute(): Route {
                 Route.Session::class.java.simpleName -> Route.Session
                 Route.Explore::class.java.simpleName -> Route.Explore
                 Route.Profile::class.java.simpleName -> Route.Profile
+                Route.EditProfile::class.java.simpleName -> Route.EditProfile
+                Route.RecentActivity::class.java.simpleName -> Route.RecentActivity
                 else -> Route.Home
             }
         }

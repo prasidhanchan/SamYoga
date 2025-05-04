@@ -85,7 +85,7 @@ fun ProfileScreen(
             ProfileCard(
                 icon = R.drawable.saved,
                 title = "Saved",
-                onClick = { }
+                onClick = { navHostController.navigate(Route.Saved) }
             )
             ProfileCard(
                 icon = R.drawable.logout,

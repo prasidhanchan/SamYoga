@@ -31,7 +31,7 @@ fun BottomBar(
     val routes = Route.routes
 
     if (currentRoute != Route.Scan() && currentRoute != Route.EditProfile &&
-        currentRoute != Route.RecentActivity
+        currentRoute != Route.RecentActivity && currentRoute != Route.Saved
     ) {
         Row(
             modifier = modifier

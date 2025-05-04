@@ -38,6 +38,9 @@ sealed class Route(val icon: Int = 0) {
     @Serializable
     data object RecentActivity : Route()
 
+    @Serializable
+    data object Saved : Route()
+
     companion object {
         val routes = listOf(Home, Session, Explore, Profile)
     }

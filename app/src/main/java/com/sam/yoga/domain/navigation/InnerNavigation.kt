@@ -19,6 +19,7 @@ import com.sam.yoga.presentation.screens.HomeScreen
 import com.sam.yoga.presentation.screens.MainViewModel
 import com.sam.yoga.presentation.screens.ProfileScreen
 import com.sam.yoga.presentation.screens.RecentActivityScreen
+import com.sam.yoga.presentation.screens.SavedScreen
 import com.sam.yoga.presentation.screens.ScanScreen
 import com.sam.yoga.presentation.screens.SessionScreen
 
@@ -65,7 +66,10 @@ fun InnerNavigation(onLogoutClick: () -> Unit) {
                 SessionScreen(navController = navController)
             }
             composable<Route.Explore> {
-                ExploreScreen()
+                ExploreScreen(
+                    innerPadding = innerPadding,
+                    viewModel = viewModel
+                )
             }
             composable<Route.Profile> {
                 ProfileScreen(
@@ -84,6 +88,13 @@ fun InnerNavigation(onLogoutClick: () -> Unit) {
             }
             composable<Route.RecentActivity> {
                 RecentActivityScreen(
+                    innerPadding = innerPadding,
+                    viewModel = viewModel,
+                    navHostController = navController
+                )
+            }
+            composable<Route.Saved> {
+                SavedScreen(
                     innerPadding = innerPadding,
                     viewModel = viewModel,
                     navHostController = navController

@@ -75,6 +75,10 @@ fun ScanScreen(
         else -> false
     }
 
+//    2131165355 Vrukshasana
+//    2131165353 Utkata Konasana
+//    2131165265 Ardha Chandrasana
+
     val yogaTTS = remember { YogaTTS(context) }
     var mediaPlayer: MediaPlayer? = null
 

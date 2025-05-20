@@ -1,6 +1,7 @@
 package com.sam.yoga
 
 import androidx.navigation.NavBackStackEntry
+import com.sam.yoga.BuildConfig.storageUrl
 import com.sam.yoga.domain.navigation.Route
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -55,16 +56,16 @@ fun getGreetings(): String {
     }
 }
 
-fun getImageResource(id: Int): Int {
-    return when (id) {
-        2131165264 -> R.drawable.adho_mukha_svanasana
-        2131165265 -> R.drawable.ardha_chandrasana
-        2131165270 -> R.drawable.baddha_konasana
-        2131165323 -> R.drawable.natarajasana
-        2131165356 -> R.drawable.trikonasana
-        2131165357 -> R.drawable.utkata_konasana
-        2131165358 -> R.drawable.veerabhadrasana
-        2131165359 -> R.drawable.vrukshasana
-        else -> R.drawable.ardha_chandrasana
+fun getImageUrl(name: String): String {
+    return when (name) {
+        "adho_mukha_svanasana" -> "$storageUrl/adho_mukha_svanasana.png"
+        "ardha_chandrasana" -> "$storageUrl/ardha_chandrasana.png"
+        "baddha_konasana" -> "$storageUrl/baddha_konasana.png"
+        "natarajasana" -> "$storageUrl/natarajasana.png"
+        "trikonasana" -> "$storageUrl/trikonasana.png"
+        "utkata_konasana" -> "$storageUrl/utkata_konasana.png"
+        "veerabhadrasana" -> "$storageUrl/veerabhadrasana.png"
+        "vrukshasana" -> "$storageUrl/vrukshasana.png"
+        else -> "$storageUrl/ardha_chandrasana.png"
     }
 }

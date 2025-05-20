@@ -1,6 +1,5 @@
 package com.sam.yoga.presentation.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import com.sam.yoga.BuildConfig.storageUrl
 import com.sam.yoga.R
 import com.sam.yoga.presentation.theme.BrandColor
 import com.sam.yoga.presentation.theme.PurpleColor
@@ -37,7 +37,7 @@ fun PoseCard(
     poseName: String,
     level: String,
     time: Long,
-    image: Painter,
+    image: String,
     modifier: Modifier = Modifier,
     onClick: (String) -> Unit,
     color: Color = when (level) {
@@ -105,8 +105,8 @@ fun PoseCard(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = image,
+                AsyncImage(
+                    model = image,
                     contentDescription = poseName
                 )
             }
@@ -122,7 +122,7 @@ private fun ActionIconPreview() {
             poseName = "Chair Pose",
             level = "Beginner",
             time = 2L,
-            image = painterResource(id = R.drawable.ardha_chandrasana),
+            image = "$storageUrl/ardha_chandrasana.png",
             onClick = { }
         )
     }

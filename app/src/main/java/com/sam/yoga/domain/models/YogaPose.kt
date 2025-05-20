@@ -5,5 +5,5 @@ data class YogaPose(
     val description: String,
     val level: String,
     val time: Long,
-    val image: Int
+    val image: String
 )

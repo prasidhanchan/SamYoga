@@ -16,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.sam.yoga.getImageResource
+import com.sam.yoga.getImageUrl
 import com.sam.yoga.presentation.components.AppBar
 import com.sam.yoga.presentation.components.Loader
 import com.sam.yoga.presentation.components.PoseCard
@@ -63,7 +62,7 @@ fun RecentActivityScreen(
                         poseName = pose.name,
                         level = pose.level,
                         time = pose.time,
-                        image = painterResource(id = getImageResource(pose.image)),
+                        image = getImageUrl(pose.image),
                         onClick = { }
                     )
                 }

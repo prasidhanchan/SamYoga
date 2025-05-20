@@ -113,56 +113,56 @@ object Util {
             description = "",
             level = "Intermediate",
             time = 2L,
-            image = R.drawable.ardha_chandrasana
+            image = "ardha_chandrasana"
         ),
         YogaPose(
             name = "Adho Mukha Svanasana",
             description = "",
             level = "Beginner",
             time = 3L,
-            image = R.drawable.adho_mukha_svanasana
+            image = "adho_mukha_svanasana"
         ),
         YogaPose(
             name = "Baddha Konasana",
             description = "",
             level = "Beginner",
             time = 5L,
-            image = R.drawable.baddha_konasana
+            image = "baddha_konasana"
         ),
         YogaPose(
             name = "Natarajasana",
             description = "",
             level = "Advanced",
             time = 2L,
-            image = R.drawable.natarajasana
+            image = "natarajasana"
         ),
         YogaPose(
             name = "Trikonasana",
             description = "",
             level = "Beginner",
             time = 5L,
-            image = R.drawable.trikonasana
+            image = "trikonasana"
         ),
         YogaPose(
             name = "Utkata Konasana",
             description = "",
             level = "Intermediate",
             time = 5L,
-            image = R.drawable.utkata_konasana
+            image = "utkata_konasana"
         ),
         YogaPose(
             name = "Veerabhadrasana",
             description = "",
             level = "Intermediate",
             time = 3L,
-            image = R.drawable.veerabhadrasana
+            image = "veerabhadrasana"
         ),
         YogaPose(
             name = "Vrukshasana",
             description = "",
             level = "Advanced",
             time = 5L,
-            image = R.drawable.vrukshasana
+            image = "vrukshasana"
         )
     )
 

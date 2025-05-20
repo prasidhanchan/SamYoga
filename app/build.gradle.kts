@@ -84,6 +84,9 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization)
 
+    // Coil
+    implementation(libs.coil.compose)
+
     // Hashing
     implementation(libs.androidx.security.crypto)
 

@@ -1,7 +1,6 @@
 package com.sam.yoga.domain.models
 
 import androidx.compose.runtime.Stable
-import com.sam.yoga.R
 
 @Stable
 data class YogaPoseData(
@@ -10,6 +9,6 @@ data class YogaPoseData(
     val description: String = "",
     val level: String = "",
     val time: Long = 0L,
-    val image: Int = R.drawable.session_image,
+    val image: String = "",
     val timeStamp: Long = System.currentTimeMillis()
 )

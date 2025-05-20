@@ -1,6 +1,7 @@
 [versions]
 agp = "8.6.1"
 kotlin = "2.1.20"
+ksp = "2.1.20-2.0.1"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -78,7 +79,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlin-ksp = { id = "com.google.devtools.ksp", version = "2.0.0-1.0.24" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 google-secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "googleSecretsGradlePlugin" }

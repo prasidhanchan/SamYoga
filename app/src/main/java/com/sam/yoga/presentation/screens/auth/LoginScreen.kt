@@ -1,5 +1,6 @@
 package com.sam.yoga.presentation.screens.auth
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -179,6 +180,7 @@ fun LoginScreen(
         }
         Box(
             modifier = Modifier
+                .padding(innerPadding)
                 .padding(bottom = 20.dp)
                 .fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
@@ -221,6 +223,7 @@ fun LoginScreen(
     }
 }
 
+@SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true)
 @Composable
 private fun LoginScreenPreview() {

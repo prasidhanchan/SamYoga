@@ -59,7 +59,7 @@ fun SamYogaNavigation() {
                 InnerNavigation(
                     onLogoutClick = {
                         navController.navigate(Route.Login) {
-                            popUpTo(Route.Home) {
+                            popUpTo(Route.Main) {
                                 inclusive = true
                             }
                         }

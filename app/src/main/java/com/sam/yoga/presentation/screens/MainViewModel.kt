@@ -147,8 +147,10 @@ class MainViewModel : ViewModel() {
     fun logout(onSuccess: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             firebaseAuth.signOut()
-            onSuccess()
-            uiState.update { it.copy(user = null) }
+            withContext(Dispatchers.Main) {
+                onSuccess()
+                uiState.update { it.copy(user = null) }
+            }
         }
     }
 

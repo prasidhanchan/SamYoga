@@ -51,7 +51,6 @@ It uses AI-based pose detection through the phone’s front camera, providing co
 
 ```
 git clone https://github.com/prasidhanchan/SamYoga.git
-cd SamYoga
 ```
 
 2. Add Secrets

@@ -34,22 +34,22 @@ It uses AI-based pose detection through the phone’s front camera, providing co
 ## Snapshots
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/3974a52b-36c7-4d81-b11b-58b41ff1410a" alt="Home Screen" width="30%" height="570px" />
-  <img src="https://github.com/user-attachments/assets/8e82ae33-ca83-4748-b287-17acf52d2ca6" alt="Session Screen" width="30%" height="570px" />
-  <img src="https://github.com/user-attachments/assets/870d276f-a553-4e3f-a184-808fe9cc3936" alt="Explore Screen" width="30%" height="570px" />
+  <img src="https://github.com/user-attachments/assets/3974a52b-36c7-4d81-b11b-58b41ff1410a" alt="Home Screen" width="30%" height="560px" />
+  <img src="https://github.com/user-attachments/assets/8e82ae33-ca83-4748-b287-17acf52d2ca6" alt="Session Screen" width="30%" height="560px" />
+  <img src="https://github.com/user-attachments/assets/870d276f-a553-4e3f-a184-808fe9cc3936" alt="Explore Screen" width="30%" height="560px" />
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/7377f1b0-6765-41c1-8b78-1e9b6a3141c7" alt="Profile Screen" width="30%" height="570px" />
-  <img src="https://github.com/user-attachments/assets/b1ffc7a2-6b01-41a4-be14-2362e10b88e0" alt="Sign Up Screen" width="30%" height="570px" />
-  <img src="https://github.com/user-attachments/assets/8d39c7db-e1a6-437c-a8c1-2407b12e66ef" alt="Login Screen" width="30%" height="570px" />
+  <img src="https://github.com/user-attachments/assets/7377f1b0-6765-41c1-8b78-1e9b6a3141c7" alt="Profile Screen" width="30%" height="560px" />
+  <img src="https://github.com/user-attachments/assets/b1ffc7a2-6b01-41a4-be14-2362e10b88e0" alt="Sign Up Screen" width="30%" height="560px" />
+  <img src="https://github.com/user-attachments/assets/8d39c7db-e1a6-437c-a8c1-2407b12e66ef" alt="Login Screen" width="30%" height="560px" />
 </p>
 
 ## Getting Started
 
 1. Download or Clone project
 
-```bash
+```
 git clone https://github.com/prasidhanchan/SamYoga.git
 cd SamYoga
 ```
